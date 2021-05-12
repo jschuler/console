@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import QuickStartMarkdownView from '../QuickStartMarkdownView';
-import { QUICKSTART_TASKS_INITIAL_STATES } from '../utils/const';
 import { QuickStartTask, QuickStartTaskStatus } from '../utils/quick-start-types';
 import TaskHeader from './QuickStartTaskHeader';
 import QuickStartTaskReview from './QuickStartTaskReview';
@@ -25,11 +24,14 @@ const QuickStartTasks: React.FC<QuickStartTaskProps> = ({
   return (
     <>
       {tasks
-        .filter((_, index) => allTaskStatuses[index] !== QuickStartTaskStatus.INIT)
+        .filter((_, index) => index <= taskNumber)
         .map((task, index) => {
-          const { title, description, review } = task;
+          const { title, description, review, summary } = task;
           const isActiveTask = index === taskNumber;
           const taskStatus = allTaskStatuses[index];
+          const summaryInstructions =
+            taskStatus === QuickStartTaskStatus.SUCCESS ? summary?.success : summary?.failed;
+          const taskInstructions = isActiveTask ? description : summaryInstructions;
 
           return (
             <React.Fragment key={title}>
@@ -45,17 +47,13 @@ const QuickStartTasks: React.FC<QuickStartTaskProps> = ({
                 isActiveTask={isActiveTask}
                 onTaskSelect={onTaskSelect}
               />
-              {isActiveTask && (
-                <div style={{ marginBottom: 'var(--pf-global--spacer--md)' }}>
-                  <QuickStartMarkdownView content={description} />
-                  {!QUICKSTART_TASKS_INITIAL_STATES.includes(taskStatus) && review && (
-                    <QuickStartTaskReview
-                      review={review}
-                      taskStatus={taskStatus}
-                      onTaskReview={onTaskReview}
-                    />
-                  )}
-                </div>
+              <QuickStartMarkdownView content={taskInstructions} />
+              {isActiveTask && taskStatus !== QuickStartTaskStatus.INIT && review && (
+                <QuickStartTaskReview
+                  review={review}
+                  taskStatus={taskStatus}
+                  onTaskReview={onTaskReview}
+                />
               )}
             </React.Fragment>
           );

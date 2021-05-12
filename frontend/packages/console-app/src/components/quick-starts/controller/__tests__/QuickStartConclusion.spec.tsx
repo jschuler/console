@@ -64,7 +64,7 @@ describe('QuickStartConclusion', () => {
     wrapper = shallow(
       <QuickStartConclusion
         {...props}
-        nextQuickStart={getQuickStartByName('explore-pipelines')}
+        {getQuickStartByName('explore-pipelines')}
         allTaskStatuses={[
           QuickStartTaskStatus.FAILED,
           QuickStartTaskStatus.SUCCESS,

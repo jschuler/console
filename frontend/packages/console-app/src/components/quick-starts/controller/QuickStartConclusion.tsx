@@ -25,7 +25,6 @@ const QuickStartConclusion: React.FC<QuickStartConclusionProps> = ({
 }) => {
   const hasFailedTask = allTaskStatuses.includes(QuickStartTaskStatus.FAILED);
   const nextQSDisplayName = nextQuickStart?.spec?.displayName;
-
   const { t } = useTranslation();
   return (
     <>

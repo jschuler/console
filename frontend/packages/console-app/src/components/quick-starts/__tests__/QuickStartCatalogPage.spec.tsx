@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { shallow } from 'enzyme';
-import QuickStartCatalogPage from '../QuickStartCatalogPage';
+import { QuickStartCatalogPage } from '../QuickStartCatalogPage';
 import QuickStartsLoader from '../loader/QuickStartsLoader';
 
 jest.mock('react-i18next', () => {

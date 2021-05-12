@@ -1,19 +1,13 @@
 import { QuickStart, QuickStartStatus, AllQuickStartStates } from './quick-start-types';
-import { allQuickStarts } from '../data/quick-start-test-data';
 
-export const QUICK_START_NAME = 'console.openshift.io/name';
-export const getQuickStarts = (): QuickStart[] => allQuickStarts;
-
-export const getQuickStartByName = (name: string): QuickStart =>
-  allQuickStarts.find((quickStart) => quickStart.metadata.name === name);
+export const getQuickStartByName = (name: string, quickStarts: QuickStart[]): QuickStart =>
+  quickStarts.find((quickStart) => quickStart.metadata.name === name);
 
 export const getQuickStartStatus = (
   allQuickStartStates: AllQuickStartStates,
   quickStartID: string,
 ): QuickStartStatus =>
   (allQuickStartStates?.[quickStartID]?.status as QuickStartStatus) ?? QuickStartStatus.NOT_STARTED;
-
-export const getTaskStatusKey = (taskNumber: number): string => `taskStatus${taskNumber}`;
 
 export const getQuickStartStatusCount = (
   allQuickStartStates: AllQuickStartStates,
@@ -30,29 +24,6 @@ export const getQuickStartStatusCount = (
       [QuickStartStatus.NOT_STARTED]: 0,
     },
   );
-};
-
-export const getDisabledQuickStarts = (): string[] => {
-  let disabledQuickStarts = [];
-  const quickStartServerData = window.SERVER_FLAGS.quickStarts;
-  try {
-    if (quickStartServerData) {
-      disabledQuickStarts = JSON.parse(quickStartServerData).disabled ?? [];
-    }
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error('error while parsing SERVER_FLAG.quickStarts', e);
-  }
-  return disabledQuickStarts;
-};
-
-export const isDisabledQuickStart = (
-  quickstart: QuickStart,
-  disabledQuickStarts: string[],
-): boolean => {
-  const quickStartName =
-    quickstart.metadata.annotations?.[QUICK_START_NAME] ?? quickstart.metadata.name;
-  return disabledQuickStarts.includes(quickStartName);
 };
 
 export const filterQuickStarts = (
@@ -77,3 +48,10 @@ export const filterQuickStarts = (
     },
   );
 };
+
+export const camelize = (str: string) => {
+  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
+    return index === 0 ? match.toLowerCase() : match.toUpperCase();
+  });
+}

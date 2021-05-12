@@ -1,19 +1,22 @@
-import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@patternfly/react-core';
-import { QuickStartStatus } from '../utils/quick-start-types';
-import { QuickStartContext, QuickStartContextValues } from '../utils/quick-start-context';
+import * as React from "react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@patternfly/react-core";
+import { QuickStartStatus } from "../utils/quick-start-types";
+import {
+  QuickStartContext,
+  QuickStartContextValues,
+} from "../utils/quick-start-context";
+import { camelize } from "../utils/quick-start-utils";
 
-import './QuickStartFooter.scss';
+import "./QuickStartFooter.scss";
 
-type QuickStartFooterProps = {
+export type QuickStartFooterProps = {
   status: QuickStartStatus;
   footerClass: string;
   taskNumber: number;
   totalTasks: number;
   onNext: () => void;
   onBack: () => void;
-  quickStartId: string;
 };
 
 const QuickStartFooter: React.FC<QuickStartFooterProps> = ({
@@ -23,88 +26,71 @@ const QuickStartFooter: React.FC<QuickStartFooterProps> = ({
   onNext,
   onBack,
   footerClass,
-  quickStartId,
 }) => {
   const { t } = useTranslation();
-
-  const { restartQuickStart } = React.useContext<QuickStartContextValues>(QuickStartContext);
-
-  const PrimaryButtonText = React.useMemo(() => {
-    return {
-      START: t('quickstart~Start'),
-      CONTINUE: t('quickstart~Continue'),
-      NEXT: t('quickstart~Next'),
-      CLOSE: t('quickstart~Close'),
-    };
-  }, [t]);
-
-  const SecondaryButtonText = React.useMemo(() => {
-    return {
-      BACK: t('quickstart~Back'),
-      RESTART: t('quickstart~Restart'),
-    };
-  }, [t]);
-
-  const onRestart = React.useCallback(
-    (e: React.SyntheticEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      restartQuickStart(quickStartId, totalTasks);
-    },
-    [quickStartId, restartQuickStart, totalTasks],
+  const { footer } = React.useContext<QuickStartContextValues>(
+    QuickStartContext
   );
 
-  const getPrimaryButtonText = React.useMemo(() => {
-    if (status === QuickStartStatus.NOT_STARTED) return PrimaryButtonText.START;
+  const showAllLink = footer?.showAllLink;
+  const onShowAllLinkClick = footer?.onShowAllLinkClick;
 
+  const PrimaryButtonText = {
+    START: t("quickstart~Start tour"),
+    NEXT: t("quickstart~Next"),
+    CLOSE: t("quickstart~Close"),
+  };
+
+  const getPrimaryButtonText = React.useCallback((): string => {
     if (taskNumber === totalTasks) return PrimaryButtonText.CLOSE;
 
-    if (taskNumber > -1 && taskNumber < totalTasks) return PrimaryButtonText.NEXT;
+    if (taskNumber > -1 && taskNumber < totalTasks)
+      return PrimaryButtonText.NEXT;
 
-    return PrimaryButtonText.CONTINUE;
-  }, [taskNumber, totalTasks, PrimaryButtonText, status]);
-
-  const getPrimaryButton = React.useMemo(
-    () => (
-      <Button variant="primary" className="co-quick-start-footer__actionbtn" onClick={onNext}>
-        {getPrimaryButtonText}
-      </Button>
-    ),
-    [getPrimaryButtonText, onNext],
-  );
-
-  const getSecondaryButton = React.useMemo(
-    () =>
-      taskNumber === -1 && status !== QuickStartStatus.NOT_STARTED ? (
-        <Button variant="secondary" onClick={onRestart}>
-          {SecondaryButtonText.RESTART}
-        </Button>
-      ) : (
-        taskNumber > -1 && (
-          <Button variant="secondary" onClick={onBack}>
-            {SecondaryButtonText.BACK}
-          </Button>
-        )
-      ),
-    [onRestart, onBack, SecondaryButtonText, status, taskNumber],
-  );
-
-  const getSideNoteAction = React.useMemo(
-    () =>
-      status === QuickStartStatus.COMPLETE &&
-      taskNumber === totalTasks && (
-        <Button variant="link" className="pull-right" onClick={onRestart}>
-          {SecondaryButtonText.RESTART}
-        </Button>
-      ),
-    [status, SecondaryButtonText, onRestart, taskNumber, totalTasks],
-  );
+    return PrimaryButtonText.START;
+  }, [
+    PrimaryButtonText.CLOSE,
+    PrimaryButtonText.NEXT,
+    PrimaryButtonText.START,
+    taskNumber,
+    totalTasks,
+  ]);
 
   return (
     <div className={`co-quick-start-footer ${footerClass}`}>
-      {getPrimaryButton}
-      {getSecondaryButton}
-      {getSideNoteAction}
+      <Button
+        style={{
+          marginRight: "var(--pf-global--spacer--md)",
+        }}
+        type="submit"
+        variant="primary"
+        onClick={onNext}
+        isInline
+        data-testid={`qs-drawer-${camelize(getPrimaryButtonText())}`}
+      >
+        {getPrimaryButtonText()}
+      </Button>
+      {taskNumber > -1 && (
+        <Button
+          style={{
+            marginRight: "var(--pf-global--spacer--md)",
+          }}
+          type="submit"
+          variant="secondary"
+          onClick={onBack}
+          isInline
+          data-testid="qs-drawer-back"
+        >
+          {t("quickstart~Back")}
+        </Button>
+      )}
+      {status === QuickStartStatus.COMPLETE &&
+        showAllLink &&
+        onShowAllLinkClick && (
+          <Button variant="link" isInline onClick={onShowAllLinkClick} data-testid="qs-drawer-viewAllTours">
+            {t("quickstart~View all tours")}
+          </Button>
+        )}
     </div>
   );
 };

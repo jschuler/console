@@ -124,7 +124,7 @@ const config: Configuration = {
       },
       {
         test: /\.s?css$/,
-        exclude: /node_modules\/(?!(@patternfly)\/).*/,
+        exclude: /node_modules\/(?!(@patternfly|@cloudmosaic)\/).*/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,

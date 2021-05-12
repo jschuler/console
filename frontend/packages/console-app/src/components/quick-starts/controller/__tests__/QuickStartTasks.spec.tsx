@@ -35,25 +35,40 @@ describe('QuickStartTasks', () => {
   });
 
   it('should render correct number of tasks based on currentTaskIndex', () => {
-    expect(wrapper.find(TaskHeader).length).toBe(1);
+    expect(wrapper.find(TaskHeader).length).toBe(2);
   });
 
-  it('should render SyncMarkdownView with description if a task is active', () => {
+  it('should render SyncMarkdownView with description or summary according to task status', () => {
     wrapper = shallow(
       <QuickStartTask
         {...props}
         allTaskStatuses={[
           QuickStartTaskStatus.SUCCESS,
           QuickStartTaskStatus.FAILED,
-          QuickStartTaskStatus.VISITED,
+          QuickStartTaskStatus.INIT,
         ]}
         taskNumber={2}
       />,
     );
+
     expect(
       wrapper
         .find(QuickStartMarkdownView)
         .at(0)
+        .props().content,
+    ).toEqual(props.tasks[0].summary.success);
+
+    expect(
+      wrapper
+        .find(QuickStartMarkdownView)
+        .at(1)
+        .props().content,
+    ).toEqual(props.tasks[1].summary.failed);
+
+    expect(
+      wrapper
+        .find(QuickStartMarkdownView)
+        .at(2)
         .props().content,
     ).toEqual(props.tasks[2].description);
   });

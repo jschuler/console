@@ -1,16 +1,19 @@
-import { AccessReviewResourceAttributes, ObjectMetadata } from '@console/internal/module/k8s';
+// import { AccessReviewResourceAttributes } from '@console/internal/module/k8s/types';
+import { AccessReviewResourceAttributes } from '../ConsoleInternal/module/k8s/types';
 
 export type QuickStart = {
-  apiVersion: string;
-  kind: string;
-  metadata: ObjectMetadata;
+  apiVersion?: string;
+  kind?: string;
+  metadata: {
+    name: string;
+  };
   spec: QuickStartSpec;
 };
 
 export type QuickStartSpec = {
-  version: number;
+  version?: number;
   displayName: string;
-  durationMinutes: number;
+  durationMinutes?: number;
   icon: string;
   description: string;
   prerequisites?: string[];
@@ -19,18 +22,20 @@ export type QuickStartSpec = {
   conclusion?: string;
   nextQuickStart?: string[];
   accessReviewResources?: AccessReviewResourceAttributes[];
+  link?: QuickStartExternal;
+  type?: QuickStartType;
 };
 
 export type QuickStartTask = {
   title?: string;
-  description: string;
+  description?: string;
   review?: QuickStartTaskReview;
   summary?: QuickStartTaskSummary;
 };
 
 export type QuickStartTaskReview = {
-  instructions: string;
-  failedTaskHelp: string;
+  instructions?: string;
+  failedTaskHelp?: string;
 };
 
 export type QuickStartTaskSummary = {
@@ -50,8 +55,17 @@ export enum QuickStartStatus {
 
 export enum QuickStartTaskStatus {
   INIT = 'Initial',
-  VISITED = 'Visited',
   REVIEW = 'Review',
   SUCCESS = 'Success',
   FAILED = 'Failed',
+}
+
+export type QuickStartExternal = {
+  href: string;
+  text?: string;
+}
+
+export type QuickStartType = {
+  text: string;
+  color?: 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey';
 }

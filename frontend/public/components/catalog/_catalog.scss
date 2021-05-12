@@ -1,3 +1,8 @@
+// frontend/public/style/_vars.scss
+$font-size-base: 14px;
+$co-m-catalog-tile-height: 100%;
+$co-m-catalog-tile-width: 260px;
+
 $catalog-capability-level-icon-left: -20px;
 $catalog-capability-level-icon-top: 4px;
 $catalog-capability-level-inactive-color: var(--pf-global--Color--400);
@@ -241,12 +246,9 @@ $catalog-tile-width: $co-m-catalog-tile-width;
   &__overlay-actions {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: var(--pf-global--spacer--md);
+    padding: var(--pf-global--spacer--lg) var(--pf-global--spacer--md) var(--pf-global--spacer--md)
+      0;
     white-space: normal;
-  }
-
-  &__overlay-header {
-    margin-bottom: var(--pf-global--spacer--md);
   }
 
   &__overlay-body {
