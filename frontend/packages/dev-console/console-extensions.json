@@ -189,6 +189,29 @@
   {
     "type": "console.catalog/item-type",
     "properties": {
+      "type": "Devfile",
+      "title": "%devconsole~Devfiles%",
+      "catalogDescription": "%devconsole~Browse for devfiles that support a particular language or framework. Cluster administrators can customize the content made available in the catalog.%",
+      "typeDescription": "%devconsole~**Devfiles** are sets of objects for creating services, build configurations, and anything you have permission to create within a Project.%"
+    },
+    "flags": {
+      "required": ["OPENSHIFT"]
+    }
+  },
+  {
+    "type": "console.catalog/item-provider",
+    "properties": {
+      "catalogId": "dev-catalog",
+      "type": "Devfile",
+      "provider": { "$codeRef": "catalog.devfileProvider" }
+    },
+    "flags": {
+      "required": ["OPENSHIFT"]
+    }
+  },
+  {
+    "type": "console.catalog/item-type",
+    "properties": {
       "type": "Sample",
       "title": "%devconsole~Samples%"
     },
@@ -202,6 +225,17 @@
       "catalogId": "samples-catalog",
       "type": "Sample",
       "provider": { "$codeRef": "catalog.builderImageSamplesProvider" }
+    },
+    "flags": {
+      "required": ["OPENSHIFT"]
+    }
+  },
+  {
+    "type": "console.catalog/item-provider",
+    "properties": {
+      "catalogId": "samples-catalog",
+      "type": "Sample",
+      "provider": { "$codeRef": "catalog.devfileSamplesProvider" }
     },
     "flags": {
       "required": ["OPENSHIFT"]
@@ -293,7 +327,7 @@
       "id": "project",
       "perspective": "dev",
       "section": "resources",
-      "name": "%devconsole~+Project%",
+      "name": "%devconsole~Project%",
       "href": "/project-details",
       "namespaced": true,
       "dataAttributes": {
@@ -311,7 +345,8 @@
       "id": "builds",
       "perspective": "dev",
       "section": "resources",
-      "name": "%devconsole~+Builds%",
+      "name": "%devconsole~Builds%",
+      "insertBefore": ["helm", "pipelines"],
       "model": {
         "kind": "BuildConfig",
         "version": "v1",
@@ -336,8 +371,8 @@
   {
     "type": "console.navigation/section",
     "properties": {
-      "id": "top",
-      "perspective": "resources"
+      "id": "resources",
+      "perspective": "dev"
     }
   }
 ]
