@@ -16,10 +16,8 @@ import {
   Button,
 } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons';
-import {
-  QuickStart,
-  QuickStartStatus,
-} from '@console/app/src/components/quick-starts/utils/quick-start-types';
+import { QuickStartStatus } from '@console/app/src/components/quick-starts/utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 import { getQuickStartStatus } from '@console/app/src/components/quick-starts/utils/quick-start-utils';
 import {
   QuickStartContext,

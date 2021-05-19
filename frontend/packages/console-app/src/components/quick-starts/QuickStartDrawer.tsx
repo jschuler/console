@@ -1,9 +1,16 @@
 import * as React from 'react';
 import { Drawer, DrawerContent, DrawerContentBody } from '@patternfly/react-core';
-import { QuickStartContext, QuickStartContextValues } from './utils/quick-start-context';
-import { QuickStartStatus } from './utils/quick-start-types';
-import QuickStartPanelContent from './QuickStartPanelContent';
-import QuickStartCloseModal from './QuickStartCloseModal';
+// import { QuickStartContext, QuickStartContextValues } from './utils/quick-start-context';
+// import { QuickStartStatus } from './utils/quick-start-types';
+// import QuickStartPanelContent from './QuickStartPanelContent';
+// import QuickStartCloseModal from './QuickStartCloseModal';
+import {
+  QuickStartContext,
+  QuickStartContextValues,
+  QuickStartStatus,
+  QuickStartPanelContent,
+  QuickStartCloseModal,
+} from '@cloudmosaic/quickstarts';
 import QuickStartsLoader from './loader/QuickStartsLoader';
 import './QuickStartDrawer.scss';
 

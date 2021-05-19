@@ -118,6 +118,7 @@
     "resolver": "./jest-resolver.js"
   },
   "dependencies": {
+    "@cloudmosaic/quickstarts": "file:.yalc/@cloudmosaic/quickstarts",
     "@fortawesome/fontawesome-free": "^5.9.0",
     "@patternfly/patternfly": "4.96.2",
     "@patternfly/react-catalog-view-extension": "4.10.29",

@@ -1,4 +1,4 @@
-import { QuickStart, QuickStartStatus, AllQuickStartStates } from './quick-start-types';
+import { QuickStart, QuickStartStatus, AllQuickStartStates } from '@cloudmosaic/quickstarts';
 import { allQuickStarts } from '../data/quick-start-test-data';
 
 export const QUICK_START_NAME = 'console.openshift.io/name';

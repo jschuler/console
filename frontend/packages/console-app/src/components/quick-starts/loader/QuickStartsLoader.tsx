@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watch-hook';
 import { referenceForModel } from '@console/internal/module/k8s/k8s';
-import { QuickStart } from '../utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 import { QuickStartModel } from '../../../models';
 import QuickStartPermissionChecker from './QuickStartPermissionChecker';
 import { isDisabledQuickStart, getDisabledQuickStarts } from '../utils/quick-start-utils';
