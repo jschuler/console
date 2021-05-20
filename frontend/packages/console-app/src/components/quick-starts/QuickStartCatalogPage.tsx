@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { LoadingBox } from '@console/internal/components/utils';
-import { Text } from '@patternfly/react-core';
-import QuickStartCatalog from './catalog/QuickStartCatalog';
+import { QuickStartCatalogPage as CMQuickStartCatalogPage } from '@cloudmosaic/quickstarts';
 import QuickStartsLoader from './loader/QuickStartsLoader';
+import '@cloudmosaic/quickstarts/dist/quickstarts.css';
 
 const QuickStartCatalogPage: React.FC = () => {
   const { t } = useTranslation();
@@ -13,19 +13,20 @@ const QuickStartCatalogPage: React.FC = () => {
       <Helmet>
         <title>{t('quickstart~Quick Starts')}</title>
       </Helmet>
-      <div className="ocs-page-layout__header">
-        <Text component="h1" className="ocs-page-layout__title">
-          {t('quickstart~Quick Starts')}
-        </Text>
-        <div className="ocs-page-layout__hint">
-          {t(
-            'quickstart~Learn how to create, import, and run applications on OpenShift with step-by-step instructions and tasks.',
-          )}
-        </div>
-      </div>
       <QuickStartsLoader>
         {(quickStarts, loaded) =>
-          loaded ? <QuickStartCatalog quickStarts={quickStarts} /> : <LoadingBox />
+          loaded ? (
+            <CMQuickStartCatalogPage
+              quickStarts={quickStarts}
+              showFilter
+              title={`Test ${t('quickstart~Quick Starts')}`}
+              hint={`Test ${t(
+                'quickstart~Learn how to create, import, and run applications on OpenShift with step-by-step instructions and tasks.',
+              )}`}
+            />
+          ) : (
+            <LoadingBox />
+          )
         }
       </QuickStartsLoader>
     </>

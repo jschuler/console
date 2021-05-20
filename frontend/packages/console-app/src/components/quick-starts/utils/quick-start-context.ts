@@ -1,32 +1,41 @@
-import { createContext, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useUserSettings } from '@console/shared/src/hooks/useUserSettings';
 import { QUICKSTART_REDUX_STATE_LOCAL_STORAGE_KEY, QUICKSTART_TASKS_INITIAL_STATES } from './const';
-import {
-  AllQuickStartStates,
-  QuickStartState,
-  QuickStartStatus,
-  QuickStartTaskStatus,
-} from './quick-start-types';
+import { QuickStartStatus, QuickStartTaskStatus } from './quick-start-types';
 import { useTelemetry } from '@console/shared/src/hooks/useTelemetry';
 import { getTaskStatusKey } from './quick-start-utils';
+import {
+  QuickStartContext,
+  QuickStartContextProvider,
+  QuickStartContextValues,
+} from '@cloudmosaic/quickstarts';
 
-export type QuickStartContextValues = {
-  activeQuickStartID: string;
-  allQuickStartStates?: AllQuickStartStates;
-  activeQuickStartState?: QuickStartState;
-  setActiveQuickStart?: (quickStartId: string, totalTasks?: number) => void;
-  startQuickStart?: (quickStartId: string, totalTasks: number) => void;
-  restartQuickStart?: (quickStartId: string, totalTasks: number) => void;
-  nextStep?: (totalTasks: number) => void;
-  previousStep?: () => void;
-  setQuickStartTaskNumber?: (quickStartId: string, taskNumber: number) => void;
-  setQuickStartTaskStatus?: (taskStatus: QuickStartTaskStatus) => void;
-  getQuickStartForId?: (id: string) => QuickStartState;
-};
+// export type QuickStartContextValues = {
+//   activeQuickStartID: string;
+//   allQuickStartStates?: AllQuickStartStates;
+//   activeQuickStartState?: QuickStartState;
+//   setActiveQuickStart?: (quickStartId: string, totalTasks?: number) => void;
+//   startQuickStart?: (quickStartId: string, totalTasks: number) => void;
+//   restartQuickStart?: (quickStartId: string, totalTasks: number) => void;
+//   nextStep?: (totalTasks: number) => void;
+//   previousStep?: () => void;
+//   setQuickStartTaskNumber?: (quickStartId: string, taskNumber: number) => void;
+//   setQuickStartTaskStatus?: (taskStatus: QuickStartTaskStatus) => void;
+//   getQuickStartForId?: (id: string) => QuickStartState;
+// };
 
-export const QuickStartContext = createContext<QuickStartContextValues>({ activeQuickStartID: '' });
+// export const QuickStartContext = createContext<QuickStartContextValues>({
+//   activeQuickStartID: '',
+//   footer: {
+//     show: false
+//   }
+// });
+export { QuickStartContext };
 
-export const QuickStartContextProvider = QuickStartContext.Provider;
+// export const QuickStartContextProvider = QuickStartContext.Provider;
+export { QuickStartContextProvider };
+
+// export { useValuesForQuickStartContext };
 
 const getInitialState = () =>
   localStorage.getItem(QUICKSTART_REDUX_STATE_LOCAL_STORAGE_KEY)
@@ -262,5 +271,8 @@ export const useValuesForQuickStartContext = (): QuickStartContextValues => {
     setQuickStartTaskNumber,
     setQuickStartTaskStatus,
     getQuickStartForId,
+    footer: {
+      show: false,
+    },
   };
 };

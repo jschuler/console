@@ -4,11 +4,7 @@ import { TextList, TextListItem } from '@patternfly/react-core';
 import { history, removeQueryArgument } from '@console/internal/components/utils';
 import { CatalogItem } from '@console/dynamic-plugin-sdk';
 import { keywordCompare } from '@console/dev-console/src/components/catalog/utils/catalog-utils';
-import { QuickStart } from '@console/app/src/components/quick-starts/utils/quick-start-types';
-import {
-  QuickStartContext,
-  QuickStartContextValues,
-} from '@console/app/src/components/quick-starts/utils/quick-start-context';
+import { QuickStart, QuickStartContext, QuickStartContextValues } from '@cloudmosaic/quickstarts';
 
 export const quickSearch = (items: CatalogItem[], query: string) => {
   return keywordCompare(query, items);

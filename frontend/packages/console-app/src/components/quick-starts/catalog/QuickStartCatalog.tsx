@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { QuickStartContext, QuickStartContextValues } from '../utils/quick-start-context';
 import {
   Button,
   EmptyState,
@@ -14,7 +13,7 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { EmptyBox, LoadingBox, removeQueryArgument } from '@console/internal/components/utils';
 import { useQueryParams } from '@console/shared';
-import { QuickStart } from '../utils/quick-start-types';
+import { QuickStart, QuickStartContext, QuickStartContextValues } from '@cloudmosaic/quickstarts';
 import {
   getQuickStartStatus,
   getQuickStartStatusCount,

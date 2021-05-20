@@ -1,4 +1,4 @@
-import { QuickStart } from '../../../utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 import { pipelineIcon } from './tour-icons';
 
 export const explorePipelinesQuickStart: QuickStart = {

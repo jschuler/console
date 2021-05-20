@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@patternfly/react-core';
 import { QuickStartStatus } from '../utils/quick-start-types';
-import { QuickStartContext, QuickStartContextValues } from '../utils/quick-start-context';
+import { QuickStartContext, QuickStartContextValues } from '@cloudmosaic/quickstarts';
 
 import './QuickStartFooter.scss';
 

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { QuickStartTaskStatus, QuickStart } from '../utils/quick-start-types';
+import { QuickStartTaskStatus } from '../utils/quick-start-types';
 import QuickStartIntroduction from './QuickStartIntroduction';
 import QuickStartTasks from './QuickStartTasks';
 import QuickStartConclusion from './QuickStartConclusion';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 
 import './QuickStartContent.scss';
 

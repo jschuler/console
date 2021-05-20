@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { AsyncComponent } from '@console/internal/components/utils';
 import { useScrollShadows, Shadows } from '@console/shared';
-import { QuickStart } from './utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 import './QuickStartPanelContent.scss';
 
 type HandleClose = () => void;

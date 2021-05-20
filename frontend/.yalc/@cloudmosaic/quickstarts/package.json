@@ -1,6 +1,6 @@
 {
   "name": "@cloudmosaic/quickstarts",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "description": "Quickstarts for MAS",
   "files": [
     "dist"
@@ -59,5 +59,5 @@
     "sass": "^1.30.0",
     "showdown": "^1.9.1"
   },
-  "yalcSig": "6605a61f38f20cbf800d02e354e7501d"
+  "yalcSig": "cfa5bf495bb5f1f00ec91c5aec158ecc"
 }

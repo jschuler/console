@@ -17,12 +17,8 @@ import {
 } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons';
 import { QuickStartStatus } from '@console/app/src/components/quick-starts/utils/quick-start-types';
-import { QuickStart } from '@cloudmosaic/quickstarts';
+import { QuickStart, QuickStartContext, QuickStartContextValues } from '@cloudmosaic/quickstarts';
 import { getQuickStartStatus } from '@console/app/src/components/quick-starts/utils/quick-start-utils';
-import {
-  QuickStartContext,
-  QuickStartContextValues,
-} from '@console/app/src/components/quick-starts/utils/quick-start-context';
 import { useUserSettingsCompatibility } from '../../hooks';
 import './QuickStartsCatalogCard.scss';
 import { useTelemetry } from '@console/shared/src/hooks/useTelemetry';

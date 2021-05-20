@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@patternfly/react-core';
 import { ArrowRightIcon } from '@patternfly/react-icons';
 import QuickStartMarkdownView from '../QuickStartMarkdownView';
-import { QuickStartTask, QuickStartTaskStatus, QuickStart } from '../utils/quick-start-types';
+import { QuickStartTask, QuickStartTaskStatus } from '../utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 import TaskHeader from './QuickStartTaskHeader';
 
 type QuickStartConclusionProps = {

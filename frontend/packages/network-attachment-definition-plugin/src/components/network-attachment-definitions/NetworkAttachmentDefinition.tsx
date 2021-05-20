@@ -24,7 +24,7 @@ import {
   useActiveNamespace,
 } from '@console/shared';
 import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watch-hook';
-import { QuickStart } from '@console/app/src/components/quick-starts/utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 import { QuickStartModel } from '@console/app/src/models';
 import { NetworkAttachmentDefinitionModel } from '../../models';
 import { getConfigAsJSON, getType } from '../../selectors';

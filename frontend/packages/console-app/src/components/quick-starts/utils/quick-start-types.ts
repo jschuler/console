@@ -1,11 +1,12 @@
-import { AccessReviewResourceAttributes, ObjectMetadata } from '@console/internal/module/k8s';
+import { AccessReviewResourceAttributes } from '@console/internal/module/k8s';
+import { QuickStartTask } from '@cloudmosaic/quickstarts';
 
-export type QuickStart = {
-  apiVersion: string;
-  kind: string;
-  metadata: ObjectMetadata;
-  spec: QuickStartSpec;
-};
+// export type QuickStart = {
+//   apiVersion: string;
+//   kind: string;
+//   metadata: ObjectMetadata;
+//   spec: QuickStartSpec;
+// };
 
 export type QuickStartSpec = {
   version: number;
@@ -21,17 +22,9 @@ export type QuickStartSpec = {
   accessReviewResources?: AccessReviewResourceAttributes[];
 };
 
-export type QuickStartTask = {
-  title?: string;
-  description: string;
-  review?: QuickStartTaskReview;
-  summary?: QuickStartTaskSummary;
-};
+export { QuickStartTask } from '@cloudmosaic/quickstarts';
 
-export type QuickStartTaskReview = {
-  instructions: string;
-  failedTaskHelp: string;
-};
+export { QuickStartTaskReview } from '@cloudmosaic/quickstarts';
 
 export type QuickStartTaskSummary = {
   success?: string;
