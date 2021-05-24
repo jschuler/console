@@ -18,7 +18,10 @@ export enum nodeActions {
   EditUpdateStrategy = 'Edit update strategy',
   EditLabels = 'Edit labels',
   EditDeployment = 'Edit Deployment',
+  EditDeploymentConfig = 'Edit DeploymentConfig',
+  EditResourceLimits = 'Edit resource limits',
   DeleteDeployment = 'Delete Deployment',
+  DeleteDeploymentConfig = 'Delete DeploymentConfig',
   EditAnnotations = 'Edit annotations',
   MoveSink = 'Move sink',
   EditSinkBinding = 'Edit SinkBinding',
@@ -33,4 +36,9 @@ export enum nodeActions {
   DeleteInMemoryChannel = 'Delete InMemoryChannel',
   EditRevision = 'Edit Revision',
   DeleteRevision = 'Delete Revision',
+}
+
+export enum authenticationTypes {
+  ImageRegistryCredentials = 'Image registry credentials',
+  UploadConfigurationFile = 'Upload configuration file',
 }

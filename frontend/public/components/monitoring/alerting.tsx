@@ -48,7 +48,7 @@ import { AlertmanagerYAMLEditorWrapper } from './alert-manager-yaml-editor';
 import { AlertmanagerConfigWrapper } from './alert-manager-config';
 import MonitoringDashboardsPage from './dashboards';
 import { QueryBrowserPage, ToggleGraph } from './metrics';
-import { FormatLegendLabel, QueryBrowser } from './query-browser';
+import { FormatSeriesTitle, QueryBrowser } from './query-browser';
 import { CreateSilence, EditSilence } from './silence-form';
 import {
   Alert,
@@ -88,7 +88,7 @@ import { ActionsMenu } from '../utils/dropdown';
 import { Firehose } from '../utils/firehose';
 import { SectionHeading, ActionButtons, BreadCrumbs } from '../utils/headings';
 import { Kebab } from '../utils/kebab';
-import { ExternalLink, getURLSearchParams } from '../utils/link';
+import { getURLSearchParams } from '../utils/link';
 import { ResourceLink } from '../utils/resource-link';
 import { ResourceStatus } from '../utils/resource-status';
 import { history } from '../utils/router';
@@ -447,7 +447,7 @@ const queryBrowserURL = (query: string, namespace: string) =>
 
 const Graph: React.FC<GraphProps> = ({
   filterLabels = undefined,
-  formatLegendLabel,
+  formatSeriesTitle,
   namespace,
   query,
   ruleDuration,
@@ -469,7 +469,7 @@ const Graph: React.FC<GraphProps> = ({
       namespace={namespace}
       defaultTimespan={timespan}
       filterLabels={filterLabels}
-      formatLegendLabel={formatLegendLabel}
+      formatSeriesTitle={formatSeriesTitle}
       GraphLink={GraphLink}
       pollInterval={Math.round(timespan / 120)}
       queries={[query]}
@@ -925,7 +925,7 @@ export const AlertRulesDetailsPage = withFallback(
 
     const { t } = useTranslation();
 
-    const formatLegendLabel = (alertLabels) => {
+    const formatSeriesTitle = (alertLabels) => {
       const nameLabel = alertLabels.__name__ ?? '';
       const otherLabels = _.omit(alertLabels, '__name__');
       return `${nameLabel}{${_.map(otherLabels, (v, k) => `${k}="${v}"`).join(',')}}`;
@@ -1033,10 +1033,11 @@ export const AlertRulesDetailsPage = withFallback(
               <div className="row">
                 <div className="col-sm-12">
                   <Graph
-                    formatLegendLabel={formatLegendLabel}
+                    formatSeriesTitle={formatSeriesTitle}
                     namespace={namespace}
                     query={rule?.query}
                     ruleDuration={rule?.duration}
+                    showLegend
                   />
                 </div>
               </div>
@@ -1665,16 +1666,6 @@ const AlertingPage: React.FC<AlertingPageProps> = ({ match }) => {
   const { url } = match;
   const isAlertmanager = url === configPath || url === YAMLPath;
 
-  const HeaderAlertmanagerLink = ({ path }) =>
-    _.isEmpty(window.SERVER_FLAGS.alertManagerPublicURL) ? null : (
-      <span className="monitoring-header-link">
-        <ExternalLink
-          href={`${window.SERVER_FLAGS.alertManagerPublicURL}${path || ''}`}
-          text={t('public~Alertmanager UI')}
-        />
-      </span>
-    );
-
   return (
     <>
       <div
@@ -1699,7 +1690,6 @@ const AlertingPage: React.FC<AlertingPageProps> = ({ match }) => {
             <span className="co-resource-item__resource-name" data-test-id="resource-title">
               {isAlertmanager ? t('public~Alertmanager') : t('public~Alerting')}
             </span>
-            <HeaderAlertmanagerLink path="/#/alerts" />
           </div>
         </h1>
       </div>
@@ -1833,10 +1823,11 @@ type AlertingPageProps = {
 
 type GraphProps = {
   filterLabels?: PrometheusLabels;
-  formatLegendLabel?: FormatLegendLabel;
+  formatSeriesTitle?: FormatSeriesTitle;
   namespace?: string;
   query: string;
   ruleDuration: number;
+  showLegend?: boolean;
 };
 
 type MonitoringResourceIconProps = {
