@@ -2,11 +2,12 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@patternfly/react-core';
 import { QuickStartStatus } from '../utils/quick-start-types';
-import { QuickStartContext, QuickStartContextValues } from '@cloudmosaic/quickstarts';
+import { QuickStartContext, QuickStartContextValues } from '../utils/quick-start-context';
+import { camelize } from '../utils/quick-start-utils';
 
 import './QuickStartFooter.scss';
 
-type QuickStartFooterProps = {
+export type QuickStartFooterProps = {
   status: QuickStartStatus;
   footerClass: string;
   taskNumber: number;
@@ -26,8 +27,12 @@ const QuickStartFooter: React.FC<QuickStartFooterProps> = ({
   quickStartId,
 }) => {
   const { t } = useTranslation();
+  const { footer, restartQuickStart } = React.useContext<QuickStartContextValues>(
+    QuickStartContext,
+  );
 
-  const { restartQuickStart } = React.useContext<QuickStartContextValues>(QuickStartContext);
+  const showAllLink = footer?.showAllLink;
+  const onShowAllLinkClick = footer?.onShowAllLinkClick;
 
   const PrimaryButtonText = React.useMemo(() => {
     return {
@@ -66,7 +71,7 @@ const QuickStartFooter: React.FC<QuickStartFooterProps> = ({
 
   const getPrimaryButton = React.useMemo(
     () => (
-      <Button variant="primary" className="co-quick-start-footer__actionbtn" onClick={onNext}>
+      <Button variant="primary" className="co-quick-start-footer__actionbtn" onClick={onNext} data-testid={`qs-drawer-${camelize(getPrimaryButtonText)}`}>
         {getPrimaryButtonText}
       </Button>
     ),
@@ -76,12 +81,12 @@ const QuickStartFooter: React.FC<QuickStartFooterProps> = ({
   const getSecondaryButton = React.useMemo(
     () =>
       taskNumber === -1 && status !== QuickStartStatus.NOT_STARTED ? (
-        <Button variant="secondary" onClick={onRestart}>
+        <Button variant="secondary" onClick={onRestart} data-testid="qs-drawer-restart">
           {SecondaryButtonText.RESTART}
         </Button>
       ) : (
         taskNumber > -1 && (
-          <Button variant="secondary" onClick={onBack}>
+          <Button variant="secondary" onClick={onBack} data-testid="qs-drawer-back">
             {SecondaryButtonText.BACK}
           </Button>
         )
@@ -93,7 +98,7 @@ const QuickStartFooter: React.FC<QuickStartFooterProps> = ({
     () =>
       status === QuickStartStatus.COMPLETE &&
       taskNumber === totalTasks && (
-        <Button variant="link" className="pull-right" onClick={onRestart}>
+        <Button variant="link" className="pull-right" onClick={onRestart} data-testid="qs-drawer-side-note-action">
           {SecondaryButtonText.RESTART}
         </Button>
       ),

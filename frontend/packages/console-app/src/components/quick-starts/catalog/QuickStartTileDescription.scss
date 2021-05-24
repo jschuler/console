@@ -1,9 +1,6 @@
 .co-quick-start-tile {
   &-description {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    margin: 0 0 var(--pf-global--spacer--md) 0;
   }
 
   &-prerequisites {
@@ -20,4 +17,9 @@
       }
     }
   }
+}
+
+ul.co-quick-start-tile-prerequisites-list {
+  padding-left: 20px;
+  list-style-type: disc;
 }

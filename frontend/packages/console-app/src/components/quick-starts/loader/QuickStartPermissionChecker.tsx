@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { QuickStart } from '@cloudmosaic/quickstarts';
+import { QuickStart } from '../utils/quick-start-types';
 import useQuickStartPermission from '../utils/useQuickStartPermission';
 
 type QuickStartPermissionCheckerProps = {

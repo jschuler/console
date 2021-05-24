@@ -24,6 +24,16 @@
   vertical-align: top;
 }
 
+.co-form-heading__popover {
+  display: inline;
+}
+
+.co-form-heading__popover-button {
+  color: inherit !important;
+  font-family: var(--pf-global--FontFamily--heading--sans-serif);
+  @include co-popover-button();
+}
+
 .co-form-section__label {
   font-size: 14px;
   margin-bottom: ($grid-gutter-width / 2);
@@ -36,12 +46,6 @@
 
 .co-form-subsection {
   margin-left: 20px;
-}
-
-.co-label--plain {
-  font-weight: var(--pf-global--FontWeight--normal);
-  margin-bottom: 0px;
-  display: inline;
 }
 
 // Restrict form widths

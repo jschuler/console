@@ -109,11 +109,11 @@ h6 {
 }
 
 // Webpack will not properly bundle the background-image from PatternFly
-@media only screen and (min-width: 576px) {
-  .pf-c-about-modal-box__hero {
-    background-image: url('../imgs/pfbg_992.jpg') !important;
-  }
-}
+// @media only screen and (min-width: 576px) {
+//   .pf-c-about-modal-box__hero {
+//     background-image: url('../imgs/pfbg_992.jpg') !important;
+//   }
+// }
 
 .pf-c-about-modal-box__brand-image,
 .pf-c-brand {

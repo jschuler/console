@@ -32,13 +32,6 @@ body,
   flex-direction: column;
 }
 
-.co-m-app__content {
-  display: flex;
-  flex: 1 0 auto;
-  flex-direction: column;
-  height: 100% // doesn't work on safari without height 
-}
-
 .co-p-has-sidebar {
   position: relative;
   display: flex;

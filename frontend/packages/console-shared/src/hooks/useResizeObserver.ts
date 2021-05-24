@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO: Remove the no-check
 import * as React from 'react';
 
 export const useResizeObserver = (

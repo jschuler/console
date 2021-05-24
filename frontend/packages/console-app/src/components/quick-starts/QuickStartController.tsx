@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { QuickStart, QuickStartContext, QuickStartContextValues } from '@cloudmosaic/quickstarts';
-import { QuickStartStatus, QuickStartTaskStatus } from './utils/quick-start-types';
+import { QuickStart, QuickStartStatus, QuickStartTaskStatus } from './utils/quick-start-types';
 import QuickStartContent from './controller/QuickStartContent';
 import QuickStartFooter from './controller/QuickStartFooter';
+import { QuickStartContext, QuickStartContextValues } from './utils/quick-start-context';
 
 type QuickStartControllerProps = {
   quickStart: QuickStart;

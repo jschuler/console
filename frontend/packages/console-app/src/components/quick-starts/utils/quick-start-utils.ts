@@ -1,12 +1,9 @@
-import { QuickStartStatus, AllQuickStartStates, QuickStart } from '@cloudmosaic/quickstarts';
-
-import { allQuickStarts } from '../data/quick-start-test-data';
+import { QuickStart, QuickStartStatus, AllQuickStartStates } from './quick-start-types';
 
 export const QUICK_START_NAME = 'console.openshift.io/name';
-export const getQuickStarts = (): QuickStart[] => allQuickStarts;
 
-export const getQuickStartByName = (name: string): QuickStart =>
-  allQuickStarts.find((quickStart) => quickStart.metadata.name === name);
+export const getQuickStartByName = (name: string, quickStarts: QuickStart[]): QuickStart =>
+  quickStarts.find((quickStart) => quickStart.metadata.name === name);
 
 export const getQuickStartStatus = (
   allQuickStartStates: AllQuickStartStates,
@@ -31,6 +28,12 @@ export const getQuickStartStatusCount = (
       [QuickStartStatus.NOT_STARTED]: 0,
     },
   );
+};
+
+declare const window: Window & {
+  SERVER_FLAGS: {
+    quickStarts: any;
+  };
 };
 
 export const getDisabledQuickStarts = (): string[] => {
@@ -77,4 +80,11 @@ export const filterQuickStarts = (
       return matchesFilter && matchesText;
     },
   );
+};
+
+export const camelize = (str: string) => {
+  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+    if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
+    return index === 0 ? match.toLowerCase() : match.toUpperCase();
+  });
 };

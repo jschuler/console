@@ -1,17 +1,16 @@
-import { AccessReviewResourceAttributes } from '@console/internal/module/k8s';
-import { QuickStartTask } from '@cloudmosaic/quickstarts';
+import { AccessReviewResourceAttributes, ObjectMetadata } from '../ConsoleInternal/module/k8s/types';
 
-// export type QuickStart = {
-//   apiVersion: string;
-//   kind: string;
-//   metadata: ObjectMetadata;
-//   spec: QuickStartSpec;
-// };
+export type QuickStart = {
+  apiVersion?: string;
+  kind?: string;
+  metadata: ObjectMetadata;
+  spec: QuickStartSpec;
+};
 
 export type QuickStartSpec = {
-  version: number;
+  version?: number;
   displayName: string;
-  durationMinutes: number;
+  durationMinutes?: number;
   icon: string;
   description: string;
   prerequisites?: string[];
@@ -20,11 +19,21 @@ export type QuickStartSpec = {
   conclusion?: string;
   nextQuickStart?: string[];
   accessReviewResources?: AccessReviewResourceAttributes[];
+  link?: QuickStartExternal;
+  type?: QuickStartType;
 };
 
-export { QuickStartTask } from '@cloudmosaic/quickstarts';
+export type QuickStartTask = {
+  title?: string;
+  description?: string;
+  review?: QuickStartTaskReview;
+  summary?: QuickStartTaskSummary;
+};
 
-export { QuickStartTaskReview } from '@cloudmosaic/quickstarts';
+export type QuickStartTaskReview = {
+  instructions?: string;
+  failedTaskHelp?: string;
+};
 
 export type QuickStartTaskSummary = {
   success?: string;
@@ -48,3 +57,13 @@ export enum QuickStartTaskStatus {
   SUCCESS = 'Success',
   FAILED = 'Failed',
 }
+
+export type QuickStartExternal = {
+  href: string;
+  text?: string;
+};
+
+export type QuickStartType = {
+  text: string;
+  color?: 'blue' | 'cyan' | 'green' | 'orange' | 'purple' | 'red' | 'grey';
+};
