@@ -55,7 +55,6 @@ i18n
       'olm',
       'pipelines-plugin',
       'public',
-      'quickstart',
       'rhoas-plugin',
       'topology',
       'tour',

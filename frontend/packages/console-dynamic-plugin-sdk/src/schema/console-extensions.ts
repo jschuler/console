@@ -9,7 +9,7 @@ import {
   ResourceTabPage,
 } from '../extensions/pages';
 import { YAMLTemplate } from '../extensions/yaml-templates';
-import { AddAction } from '../extensions/add-actions';
+import { AddAction, AddActionGroup } from '../extensions/add-actions';
 import { ClusterGlobalConfig } from '../extensions/cluster-settings';
 import {
   HrefNavItem,
@@ -31,13 +31,20 @@ import {
   DashboardsTab,
   DashboardsCard,
   DashboardsOverviewHealthPrometheusSubsystem,
-  DashboardsOverviewURLSubsystem,
+  DashboardsOverviewHealthURLSubsystem,
   DashboardsOverviewHealthResourceSubsystem,
   DashboardsOverviewHealthOperator,
   DashboardsInventoryItemGroup,
   DashboardsOverviewInventoryItem,
   DashboardsOverviewResourceActivity,
 } from '../extensions/dashboards';
+import {
+  TopologyComponentFactory,
+  TopologyCreateConnector,
+  TopologyDataModelFactory,
+  TopologyDecoratorProvider,
+  TopologyDisplayFilters,
+} from '../extensions/topology';
 
 export type SupportedExtension =
   | FeatureFlag
@@ -51,6 +58,7 @@ export type SupportedExtension =
   | PVCDelete
   | YAMLTemplate
   | AddAction
+  | AddActionGroup
   | ClusterGlobalConfig
   | HrefNavItem
   | ResourceNSNavItem
@@ -72,12 +80,17 @@ export type SupportedExtension =
   | DashboardsTab
   | DashboardsCard
   | DashboardsOverviewHealthPrometheusSubsystem
-  | DashboardsOverviewURLSubsystem
+  | DashboardsOverviewHealthURLSubsystem
   | DashboardsOverviewHealthResourceSubsystem
   | DashboardsOverviewHealthOperator
   | DashboardsInventoryItemGroup
   | DashboardsOverviewInventoryItem
-  | DashboardsOverviewResourceActivity;
+  | DashboardsOverviewResourceActivity
+  | TopologyComponentFactory
+  | TopologyCreateConnector
+  | TopologyDataModelFactory
+  | TopologyDisplayFilters
+  | TopologyDecoratorProvider;
 
 /**
  * Schema of Console plugin's `console-extensions.json` file.

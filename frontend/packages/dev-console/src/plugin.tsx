@@ -9,7 +9,6 @@ import {
   Perspective,
   RoutePage,
   OverviewResourceTab,
-  YAMLTemplate,
   OverviewTabSection,
   GuidedTour,
   PostFormSubmissionAction,
@@ -33,7 +32,6 @@ type ConsumedExtensions =
   | RoutePage
   | KebabActions
   | OverviewResourceTab
-  | YAMLTemplate
   | OverviewTabSection
   | GuidedTour
   | PostFormSubmissionAction;
@@ -91,7 +89,8 @@ const plugin: Plugin<ConsumedExtensions> = [
       exact: true,
       path: ['/add/all-namespaces', '/add/ns/:ns'],
       loader: async () =>
-        (await import('./components/AddPage' /* webpackChunkName: "dev-console-add" */)).default,
+        (await import('./components/add/AddPage' /* webpackChunkName: "dev-console-add" */))
+          .default,
     },
   },
   {
@@ -183,7 +182,7 @@ const plugin: Plugin<ConsumedExtensions> = [
     type: 'Page/Route',
     properties: {
       exact: true,
-      path: ['/samples/ns/:ns/:is/:isNs'],
+      path: ['/samples/all-namespaces/:is/:isNs', '/samples/ns/:ns/:is/:isNs'],
       loader: async () =>
         (
           await import(

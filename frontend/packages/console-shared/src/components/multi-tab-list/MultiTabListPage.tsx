@@ -49,14 +49,13 @@ const MultiTabListPage: React.FC<MultiTabListPageProps> = ({
   const items = Object.keys(menuActions).reduce((acc, key) => {
     const menuAction: MenuAction = menuActions[key];
     const label =
-      menuAction.label || menuAction.model?.labelKey
-        ? t(menuAction.model.labelKey)
-        : menuAction.model?.label;
+      menuAction.label ||
+      (menuAction.model?.labelKey ? t(menuAction.model.labelKey) : menuAction.model?.label);
     if (!label) return acc;
 
     return {
       ...acc,
-      [key]: menuAction,
+      [key]: label,
     };
   }, {});
 

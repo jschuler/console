@@ -1,5 +1,5 @@
 import { useAccessReview2 } from '@console/internal/components/utils';
-import { QuickStart } from './quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 
 const useQuickStartPermission = (quickStart: QuickStart): [boolean, boolean] => {
   const {

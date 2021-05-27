@@ -4,13 +4,15 @@ Feature: Kafka Event Source
 
 
         Background:
-            Given Kafka Operator installed
-              And BootStrapServers and Topics created
+            Given user has installed Serverless Operator
+              And user has created Knative Kafka instance in knative-eventing namespace
+              And user has installed Red Hat Integration - AMQ Streams operator
+              And user has created Kafka instance and Topics
               And user has created or selected namespace "aut-kafka"
 
 
         @regression
-        Scenario: BootStrapServers and Topics Drop Down
+        Scenario: BootStrapServers and Topics Drop Down: KF-02-TC01
              When user navig to Add page
               And user clicks on Event Sources card
               And user clicks on Kafka Sources
@@ -18,7 +20,8 @@ Feature: Kafka Event Source
               And user will see the items in Topics dropdown
 
 
-        Scenario: Select multiple BootStrapServers and Topics from dropdown
+        @regression
+        Scenario: Select multiple BootStrapServers and Topics from dropdown: KF-02-TC02
              When user creates a BootStrapServer
               And user creates a Topics
               And user clicks on Event Sources card
@@ -34,7 +37,7 @@ Feature: Kafka Event Source
 
 
         @regression
-        Scenario: Enter BootStrapServers and Topics
+        Scenario: Enter BootStrapServers and Topics: KF-02-TC03
              When user creates a BootStrapServer
               And user creates a Topics
               And user clicks on Event Sources card

@@ -18,6 +18,7 @@ export const topologySidePane = {
       .contains(tabName)
       .should('be.visible'),
   verifyActionsDropDown: () => cy.get(topologyPO.sidePane.actionsDropDown).should('be.visible'),
+  clickActionsDropDown: () => cy.get(topologyPO.sidePane.actionsDropDown).click(),
   selectTab: (tabName: string) =>
     cy
       .get(topologyPO.sidePane.tabName)
@@ -81,7 +82,7 @@ export const topologySidePane = {
   },
   verifyLabel: (labelName: string) => {
     cy.get(topologyPO.sidePane.detailsTab.labels).should('be.visible');
-    cy.byButtonText('Edit').click();
+    cy.get(topologyPO.sidePane.detailsTab.labelsEdit).click();
     modal.shouldBeOpened();
     cy.get('span.tag-item__content')
       .contains(labelName)
@@ -119,8 +120,7 @@ export const topologySidePane = {
   verifyPipelineRuns: () => {
     cy.get(topologyPO.sidePane.resourcesTab.pipelineRuns).should('be.visible');
   },
-  selectResource: (opt: resources | string) => {
-    const namespace = Cypress.env('namespace');
+  selectResource: (opt: resources | string, namespace: string) => {
     switch (opt) {
       case 'Deployment Configs':
       case resources.DeploymentConfigs: {

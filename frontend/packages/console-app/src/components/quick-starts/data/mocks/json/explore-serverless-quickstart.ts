@@ -1,4 +1,4 @@
-import { QuickStart } from '../../../utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 import { serverlessIcon } from './tour-icons';
 
 export const exploreServerlessQuickStart: QuickStart = {

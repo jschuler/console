@@ -50,15 +50,9 @@ const suite = (tests: string[]): string[] =>
 
 // TODO(vojtech): move base Console test suites to console-app package
 const testSuites = {
-  filter: suite(['tests/filter.scenario.ts']),
   environment: suite(['tests/environment.scenario.ts']),
   secrets: suite(['tests/secrets.scenario.ts']),
-  storage: suite(['tests/storage.scenario.ts']),
-  crud: suite([
-    'tests/secrets.scenario.ts',
-    'tests/filter.scenario.ts',
-    'tests/environment.scenario.ts',
-  ]),
+  crud: suite(['tests/secrets.scenario.ts', 'tests/environment.scenario.ts']),
   event: suite(['tests/event.scenario.ts']),
   monitoring: suite(['tests/monitoring.scenario.ts']),
   newApp: suite(['tests/overview/overview.scenario.ts', 'tests/deploy-image.scenario.ts']),
@@ -66,9 +60,7 @@ const testSuites = {
   crdExtensions: suite(['tests/crd-extensions.scenario.ts']),
   oauth: suite(['tests/oauth.scenario.ts']),
   e2e: suite([
-    'tests/filter.scenario.ts',
     'tests/secrets.scenario.ts',
-    'tests/storage.scenario.ts',
     'tests/environment.scenario.ts',
     'tests/overview/overview.scenario.ts',
     'tests/deploy-image.scenario.ts',
@@ -76,7 +68,6 @@ const testSuites = {
     'tests/alertmanager.scenario.ts',
     'tests/crd-extensions.scenario.ts',
     'tests/oauth.scenario.ts',
-    'tests/devconsole/pipeline.scenario.ts',
     'tests/dashboards/cluster-dashboard.scenario.ts',
     'tests/dashboards/project-dashboard.scenario.ts',
     'tests/event.scenario.ts',
@@ -84,7 +75,6 @@ const testSuites = {
   ]),
   release: suite([
     'tests/secrets.scenario.ts',
-    'tests/filter.scenario.ts',
     'tests/environment.scenario.ts',
     'tests/overview/overview.scenario.ts',
     'tests/deploy-image.scenario.ts',
@@ -97,16 +87,9 @@ const testSuites = {
   all: suite([
     'tests/overview/overview.scenario.ts',
     'tests/secrets.scenario.ts',
-    'tests/storage.scenario.ts',
-    'tests/service-catalog/**/*.scenario.ts',
-    'tests/filter.scenario.ts',
     'tests/deploy-image.scenario.ts',
-    'tests/developer-catalog.scenario.ts',
     'tests/monitoring.scenario.ts',
     'tests/alertmanager.scenario.ts',
-    'tests/devconsole/dev-perspective.scenario.ts',
-    'tests/devconsole/git-import-flow.scenario.ts',
-    'tests/devconsole/pipeline.scenario.ts',
     'tests/crd-extensions.scenario.ts',
     'tests/oauth.scenario.ts',
     'tests/dashboards/cluster-dashboard.scenario.ts',

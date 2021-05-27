@@ -862,7 +862,9 @@ class StorageClassFormWithTranslation extends React.Component<
         return (
           <Component
             key={key}
-            onParamChange={(value: string) => this.setParameterHandler(key, value, false)}
+            parameterKey={key}
+            parameterValue={this.state.newStorageClass.parameters[key]?.value || ''}
+            onParamChange={this.setParameterHandler}
           />
         );
       }
@@ -1026,7 +1028,7 @@ class StorageClassFormWithTranslation extends React.Component<
               {t('public~Reclaim policy')}
             </label>
             <Dropdown
-              title="Select reclaim policy"
+              title={t('public~Select reclaim policy')}
               items={this.reclaimPolicies}
               dropDownClassName="dropdown--full-width"
               selectedKey={reclaimPolicyKey}
@@ -1045,7 +1047,7 @@ class StorageClassFormWithTranslation extends React.Component<
               {t('public~Provisioner')}
             </label>
             <Dropdown
-              title="Select Provisioner"
+              title={t('public~Select Provisioner')}
               autocompleteFilter={this.autocompleteFilter}
               autocompletePlaceholder={'Select Provisioner'}
               items={_.mapValues(this.storageTypes, 'provisioner')}

@@ -6,7 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { match } from 'react-router';
 import { Link, useLocation } from 'react-router-dom';
 
-import { QuickStart } from '@console/app/src/components/quick-starts/utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 import { QuickStartModel } from '@console/app/src/models';
 import {
   MultiListPage,

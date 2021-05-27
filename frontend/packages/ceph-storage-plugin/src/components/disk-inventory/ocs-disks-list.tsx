@@ -48,6 +48,7 @@ import {
   OCSColumnStateAction,
   Status,
   OCSDiskStatus,
+  ReplacedDisk,
 } from './state-reducer';
 import { CEPH_STORAGE_NAMESPACE, OSD_DOWN_ALERT, OSD_DOWN_AND_OUT_ALERT } from '../../constants';
 
@@ -99,12 +100,18 @@ const diskRow: RowFunction<DiskMetadata, OCSMetadata> = ({
   customData,
 }) => {
   const { ocsState, nodeName, dispatch } = customData;
-  const diskName = obj.path;
   return (
     <TableRow id={obj.deviceID} index={index} trKey={key} style={style}>
       <TableData className={tableColumnClasses[0]}>{obj.path}</TableData>
       <TableData className={tableColumnClasses[1]}>{obj.status.state}</TableData>
-      <OCSStatus ocsState={ocsState} diskName={diskName} className={tableColumnClasses[1]} />
+      <OCSStatus
+        ocsState={ocsState}
+        nodeName={nodeName}
+        diskName={obj.path}
+        diskID={obj.deviceID}
+        diskSerial={obj.serial}
+        className={tableColumnClasses[1]}
+      />
       <TableData className={tableColumnClasses[2]}>{obj.type || '-'}</TableData>
       <TableData className={cx(tableColumnClasses[3], 'co-break-word')}>
         {obj.model || '-'}
@@ -113,14 +120,7 @@ const diskRow: RowFunction<DiskMetadata, OCSMetadata> = ({
         {humanizeBinaryBytes(obj.size).string || '-'}
       </TableData>
       <TableData className={tableColumnClasses[5]}>{obj.fstype || '-'}</TableData>
-      <OCSKebabOptions
-        nodeName={nodeName}
-        diskName={diskName}
-        alertsMap={ocsState.alertsMap}
-        replacementMap={ocsState.replacementMap}
-        isRebalancing={ocsState.isRebalancing}
-        dispatch={dispatch}
-      />
+      <OCSKebabOptions disk={obj} nodeName={nodeName} ocsState={ocsState} dispatch={dispatch} />
     </TableRow>
   );
 };
@@ -157,6 +157,7 @@ const OCSDisksList: React.FC<TableProps> = React.memo((props) => {
       ocsDiskList[metric.device] = {
         osd: metric.ceph_daemon,
         status: Status.Online,
+        node: metric.exported_instance,
       };
       return ocsDiskList;
     }, {});
@@ -164,7 +165,7 @@ const OCSDisksList: React.FC<TableProps> = React.memo((props) => {
       (ocsDiskList: OCSDiskList, alert: Alert) => {
         const { rule, labels } = alert;
         const status = getAlertsBasedStatus(rule.name);
-        if (status) ocsDiskList[labels.device] = { osd: labels.disk, status };
+        if (status) ocsDiskList[labels.device] = { osd: labels.disk, status, node: labels.host };
         return ocsDiskList;
       },
       {},
@@ -183,19 +184,49 @@ const OCSDisksList: React.FC<TableProps> = React.memo((props) => {
     }
 
     if (tiLoaded && !tiLoadError && tiData.length) {
-      const newData: OCSDiskList = tiData.reduce((data, ti) => {
-        const { disk, node, osd } = getAnnotations(ti) || {};
-        if (osd && disk && node === nodeName && ocsState.metricsMap?.[disk]?.osd === osd) {
-          data[disk] = {
-            osd,
+      const newData: ReplacedDisk[] = tiData.reduce((data: ReplacedDisk[], ti) => {
+        const { devicePath, deviceID, deviceOsd, deviceNode, deviceSerial } =
+          getAnnotations(ti) || {};
+        if (devicePath && deviceOsd && deviceNode === nodeName) {
+          data.push({
+            osd: deviceOsd,
+            disk: {
+              id: deviceID,
+              path: devicePath,
+              serial: deviceSerial,
+            },
+            node: nodeName,
             status: getTiBasedStatus(ti.status.conditions?.[0].type),
-          };
+          });
         }
         return data;
-      }, {});
-      if (!_.isEqual(newData, ocsState.replacementMap)) {
+      }, []);
+      if (!_.isEqual(newData, ocsState.replacedDiskList)) {
         dispatch({
-          type: ActionType.SET_REPLACEMENT_MAP,
+          type: ActionType.SET_REPLACED_DISK_LIST,
+          payload: newData,
+        });
+      }
+    }
+
+    if (ocsState.replacingDiskList.length !== 0) {
+      const replacedDiskIndexList = ocsState.replacingDiskList.reduce((indexes, disk, index) => {
+        const hasReplaced = ocsState.replacedDiskList?.some((rd: ReplacedDisk) => {
+          const diskInfo = rd?.disk;
+          return (
+            diskInfo?.path === disk.path &&
+            diskInfo?.id === disk.id &&
+            diskInfo?.serial === disk.serial
+          );
+        });
+        if (hasReplaced) indexes.push(index);
+        return indexes;
+      }, []);
+      if (replacedDiskIndexList.length) {
+        const newData = [...ocsState.replacingDiskList];
+        replacedDiskIndexList.forEach((index) => newData.splice(index, 1));
+        dispatch({
+          type: ActionType.SET_REPLACING_DISK_LIST,
           payload: newData,
         });
       }

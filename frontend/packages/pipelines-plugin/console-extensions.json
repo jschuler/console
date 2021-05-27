@@ -1,13 +1,23 @@
 [
   {
+    "type": "dev-console.add/action-group",
+    "properties": {
+      "id": "pipelines",
+      "name": "%pipelines-plugin~Pipelines%",
+      "insertBefore": "samples",
+      "insertAfter": "local-machine"
+    }
+  },
+  {
     "type": "dev-console.add/action",
     "flags": {
       "required": ["OPENSHIFT_PIPELINE"]
     },
     "properties": {
       "id": "pipeline",
+      "groupId": "pipelines",
       "href": "/k8s/ns/:namespace/tekton.dev~v1beta1~Pipeline/~new/builder",
-      "label": "%pipelines-plugin~Pipeline%",
+      "label": "%pipelines-plugin~Pipelines%",
       "description": "%pipelines-plugin~Create a Tekton Pipeline to automate delivery of your Application%",
       "icon": { "$codeRef": "icons.pipelineIconSVG" },
       "accessReview": [
@@ -84,6 +94,66 @@
     },
     "flags": {
       "required": ["OPENSHIFT_PIPELINE"]
+    }
+  },
+  {
+    "type": "console.yaml-template",
+    "properties": {
+      "name": "default",
+      "model": {
+        "group": "tekton.dev",
+        "kind": "Pipeline",
+        "version": "v1beta1"
+      },
+      "template": { "$codeRef": "yamlTemplates.newPipelineTemplate" }
+    }
+  },
+  {
+    "type": "console.yaml-template",
+    "properties": {
+      "name": "default",
+      "model": {
+        "group": "tekton.dev",
+        "kind": "Task",
+        "version": "v1beta1"
+      },
+      "template": { "$codeRef": "yamlTemplates.newTaskTemplate" }
+    }
+  },
+  {
+    "type": "console.yaml-template",
+    "properties": {
+      "name": "default",
+      "model": {
+        "group": "tekton.dev",
+        "kind": "TaskRunModel",
+        "version": "v1beta1"
+      },
+      "template": { "$codeRef": "yamlTemplates.newTaskRunTemplate" }
+    }
+  },
+  {
+    "type": "console.yaml-template",
+    "properties": {
+      "name": "default",
+      "model": {
+        "group": "tekton.dev",
+        "kind": "PipelineResource",
+        "version": "v1alpha1"
+      },
+      "template": { "$codeRef": "yamlTemplates.newPipelineResourceTemplate" }
+    }
+  },
+  {
+    "type": "console.yaml-template",
+    "properties": {
+      "name": "default",
+      "model": {
+        "group": "tekton.dev",
+        "kind": "ClusterTask",
+        "version": "v1beta1"
+      },
+      "template": { "$codeRef": "yamlTemplates.newClusterTaskTemplate" }
     }
   }
 ]

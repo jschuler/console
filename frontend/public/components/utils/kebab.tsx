@@ -92,6 +92,7 @@ const KebabItem_: React.FC<KebabItemProps & { isAllowed: boolean }> = ({
       onClick={(e) => !disabled && onClick(e, option)}
       autoFocus={autoFocus}
       onKeyDown={onEscape && handleEscape}
+      disabled={disabled}
       data-test-action={option.labelKey ? t(option.labelKey, option.labelKind) : option.label}
     >
       {option.icon && <span className="oc-kebab__icon">{option.icon}</span>}
@@ -159,11 +160,17 @@ const KebabSubMenu: React.FC<KebabSubMenuProps> = ({ option, onClick }) => {
         }}
         reference={referenceCb}
       >
-        <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+        <FocusTrap
+          focusTrapOptions={{
+            clickOutsideDeactivates: true,
+            fallbackFocus: () => subMenuRef.current, // fallback to popover content wrapper div if there are no tabbable elements
+          }}
+        >
           <div
             ref={subMenuCbRef}
             role="presentation"
             className="pf-c-dropdown pf-m-expanded"
+            tabIndex={-1}
             onMouseLeave={(e) => {
               // only close the sub menu if the mouse does not enter the item
               if (!nodeRef.current || !nodeRef.current.contains(e.relatedTarget as Node)) {
@@ -205,9 +212,10 @@ export const KebabItem: React.FC<KebabItemProps> = (props) => {
   } else {
     item = <KebabItem_ {...props} isAllowed />;
   }
+  const tooltip = option.tooltipKey ? i18next.t(option.tooltipKey) : option.tooltip;
 
-  return option.tooltip ? (
-    <Tooltip position="left" content={option.tooltip}>
+  return tooltip ? (
+    <Tooltip position="left" content={tooltip}>
       {item}
     </Tooltip>
   ) : (
@@ -362,9 +370,7 @@ const kebabFactory: KebabFactory = {
     labelKey: 'public~Create snapshot',
     isDisabled: obj?.status?.phase !== 'Bound',
     tooltip: obj?.status?.phase !== 'Bound' ? 'PVC is not Bound' : '',
-    href: `${resourceObjPath(obj, kind.crd ? referenceForModel(kind) : kind.kind)}/${
-      VolumeSnapshotModel.plural
-    }/~new/form`,
+    href: `/k8s/ns/${obj.metadata.namespace}/${VolumeSnapshotModel.plural}/~new/form?pvc=${obj.metadata.name}`,
     accessReview: asAccessReview(kind, obj, 'create'),
   }),
   ClonePVC: (kind, obj) => ({
@@ -447,6 +453,8 @@ export class Kebab extends React.Component<any, { active: boolean }> {
 
   private dropdownElement = React.createRef<HTMLButtonElement>();
 
+  private divElement = React.createRef<HTMLDivElement>();
+
   constructor(props) {
     super(props);
     this.state = {
@@ -499,6 +507,8 @@ export class Kebab extends React.Component<any, { active: boolean }> {
 
   getPopperReference = () => this.dropdownElement.current;
 
+  getDivReference = () => this.divElement.current;
+
   render() {
     const { options, isDisabled } = this.props;
 
@@ -535,9 +545,13 @@ export class Kebab extends React.Component<any, { active: boolean }> {
           reference={this.getPopperReference}
         >
           <FocusTrap
-            focusTrapOptions={{ clickOutsideDeactivates: true, returnFocusOnDeactivate: false }}
+            focusTrapOptions={{
+              clickOutsideDeactivates: true,
+              returnFocusOnDeactivate: false,
+              fallbackFocus: this.getDivReference, // fallback to popover content wrapper div if there are no tabbable elements
+            }}
           >
-            <div className="pf-c-dropdown pf-m-expanded">
+            <div ref={this.divElement} className="pf-c-dropdown pf-m-expanded" tabIndex={-1}>
               <KebabMenuItems
                 options={menuOptions}
                 onClick={this.onClick}
@@ -562,6 +576,7 @@ export type KebabOption = {
   accessReview?: AccessReviewResourceAttributes;
   isDisabled?: boolean;
   tooltip?: string;
+  tooltipKey?: string;
   // a `/` separated string where each segment denotes a new sub menu entry
   // Eg. `Menu 1/Menu 2/Menu 3`
   path?: string;

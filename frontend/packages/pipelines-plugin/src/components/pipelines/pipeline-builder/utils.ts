@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
-import { TFunction } from 'i18next';
 import { FormikErrors } from 'formik';
-import i18n from '@console/internal/i18n';
+import i18n from 'i18next';
 import { apiVersionForModel } from '@console/internal/module/k8s';
 import { getRandomChars } from '@console/shared';
 import { ClusterTaskModel, PipelineModel, TaskModel } from '../../../models';
@@ -61,7 +60,6 @@ export const getTopLevelErrorMessage: GetErrorMessage = (errors) => (taskIndex) 
 export const findTask = (
   resourceTasks: PipelineBuilderTaskResources,
   task: PipelineTask,
-  t: TFunction = i18n.t,
 ): TaskKind => {
   if (task?.taskRef) {
     if (
@@ -88,7 +86,7 @@ export const findTask = (
       apiVersion: apiVersionForModel(TaskModel),
       kind: 'EmbeddedTask',
       metadata: {
-        name: t('pipelines-plugin~Embedded Task'),
+        name: i18n.t('pipelines-plugin~Embedded Task'),
       },
       spec: task.taskSpec,
     };
@@ -100,10 +98,9 @@ export const findTask = (
 export const findTaskFromFormikData = (
   formikData: PipelineBuilderFormYamlValues,
   task: PipelineTask,
-  t: TFunction,
 ): TaskKind => {
   const { taskResources } = formikData;
-  return findTask(taskResources, task, t);
+  return findTask(taskResources, task);
 };
 
 /**
@@ -265,16 +262,25 @@ const removeListRunAfters = (task: PipelineTask, listIds: string[]): PipelineTas
   return task;
 };
 
-const removeEmptyDefaultParams = (task: PipelineTask): PipelineTask => {
+export const removeEmptyFormFields = (task: PipelineTask): PipelineTask => {
+  let trimmedTask = task;
+  // Since we can submit, this param has a default; check for empty values and remove
   if (task.params?.length > 0) {
-    // Since we can submit, this param has a default; check for empty values and remove
-    return {
-      ...task,
-      params: task.params.filter((param) => !!param.value),
-    };
+    const params = task.params?.filter((param) => !!param.value);
+    trimmedTask = { ...trimmedTask, params };
   }
-
-  return task;
+  // Drop input/output resources which are not linked to an (optional) resource.
+  if (task.resources?.inputs?.length > 0 || task.resources?.outputs?.length > 0) {
+    const inputs = task.resources?.inputs?.filter((resource) => resource.resource);
+    const outputs = task.resources?.outputs?.filter((resource) => resource.resource);
+    trimmedTask = { ...trimmedTask, resources: { ...trimmedTask.resources, inputs, outputs } };
+  }
+  // Drop workspaces which are not linked to an (optional) workspace.
+  if (task.workspaces?.length > 0) {
+    const workspaces = task.workspaces?.filter((workspace) => workspace.workspace);
+    trimmedTask = { ...trimmedTask, workspaces };
+  }
+  return trimmedTask;
 };
 
 export const convertBuilderFormToPipeline = (
@@ -311,7 +317,7 @@ export const convertBuilderFormToPipeline = (
       params: removeEmptyDefaultFromPipelineParams(params),
       resources,
       workspaces,
-      tasks: tasks.map((task) => removeEmptyDefaultParams(removeListRunAfters(task, listIds))),
+      tasks: tasks.map((task) => removeEmptyFormFields(removeListRunAfters(task, listIds))),
       finally: finallyTasks,
     },
   };

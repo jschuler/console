@@ -1,4 +1,4 @@
-import { QuickStart } from '../../../utils/quick-start-types';
+import { QuickStart } from '@cloudmosaic/quickstarts';
 
 export const monitorSampleAppQuickStart: QuickStart = {
   apiVersion: 'console.openshift.io/v1',

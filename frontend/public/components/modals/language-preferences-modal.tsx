@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import i18next, { TFunction } from 'i18next';
+import { i18n as CMi18n } from '@cloudmosaic/quickstarts';
 
 import { Dropdown } from '../utils';
 import {
@@ -32,6 +33,7 @@ const LanguagePreferencesModal = (props: LanguagePreferencesModalProps) => {
   const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     i18n.changeLanguage(language ? language : 'en');
+    CMi18n.changeLanguage(language ? language : 'en');
     localStorage.setItem('bridge/language', language);
     close();
   };
