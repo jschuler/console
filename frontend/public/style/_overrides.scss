@@ -1,3 +1,12 @@
+@import './vars';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap/variables';
+@import './mixin/break-word';
+
+:root {
+  --pf-global--FontSize--md: 14px;
+  --pf-global--FontSize--sm: 13px;
+}
+
 // Use this file to override styles from 3rd party dependencies
 $pf-4-nav-bar-height: 76px; // Height of the PatternFly 4 masthead
 
@@ -109,11 +118,11 @@ h6 {
 }
 
 // Webpack will not properly bundle the background-image from PatternFly
-@media only screen and (min-width: 576px) {
-  .pf-c-about-modal-box__hero {
-    background-image: url('../imgs/pfbg_992.jpg') !important;
-  }
-}
+// @media only screen and (min-width: 576px) {
+//   .pf-c-about-modal-box__hero {
+//     background-image: url('../imgs/pfbg_992.jpg') !important;
+//   }
+// }
 
 .pf-c-about-modal-box__brand-image,
 .pf-c-brand {

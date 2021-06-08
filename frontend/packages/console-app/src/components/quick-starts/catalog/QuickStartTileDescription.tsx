@@ -7,8 +7,10 @@ import {
   TextList,
   TextListItem,
   TextVariants,
+  TextContent,
 } from '@patternfly/react-core';
 import { InfoCircleIcon } from '@patternfly/react-icons';
+import QuickStartMarkdownView from '../QuickStartMarkdownView';
 
 import './QuickStartTileDescription.scss';
 
@@ -16,7 +18,6 @@ type QuickStartTileDescriptionProps = {
   description: string;
   prerequisites?: string[];
 };
-
 const QuickStartTileDescription: React.FC<QuickStartTileDescriptionProps> = ({
   description,
   prerequisites,
@@ -25,9 +26,7 @@ const QuickStartTileDescription: React.FC<QuickStartTileDescriptionProps> = ({
   const prereqs = prerequisites?.filter((p) => p);
   return (
     <>
-      <Text component={TextVariants.p} className="co-quick-start-tile-description">
-        {description}
-      </Text>
+      <QuickStartMarkdownView content={description} className="co-quick-start-tile-description" />
       {prereqs?.length > 0 && (
         <div className="co-quick-start-tile-prerequisites">
           <Text component={TextVariants.h5} className="co-quick-start-tile-prerequisites__text">
@@ -38,11 +37,17 @@ const QuickStartTileDescription: React.FC<QuickStartTileDescriptionProps> = ({
           <Popover
             aria-label={t('quickstart~Prerequisites')}
             headerContent={t('quickstart~Prerequisites')}
+            className="co-quick-start-panel-content"
             bodyContent={
-              <TextList aria-label={t('quickstart~Prerequisites')}>
+              <TextList
+                aria-label={t('quickstart~Prerequisites')}
+                className="co-quick-start-tile-prerequisites-list"
+              >
                 {prereqs.map((prerequisite, index) => (
                   // eslint-disable-next-line react/no-array-index-key
-                  <TextListItem key={index}>{prerequisite}</TextListItem>
+                  <TextListItem key={index}>
+                    <QuickStartMarkdownView content={prerequisite} />
+                  </TextListItem>
                 ))}
               </TextList>
             }
@@ -51,6 +56,7 @@ const QuickStartTileDescription: React.FC<QuickStartTileDescriptionProps> = ({
               variant="link"
               isInline
               className="co-quick-start-tile-prerequisites__icon"
+              data-testid="qs-card-prereqs"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

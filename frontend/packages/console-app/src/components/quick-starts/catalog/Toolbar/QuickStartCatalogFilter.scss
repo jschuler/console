@@ -1,0 +1,21 @@
+.co-quick-start-catalog-filter {
+  &__flex {
+    padding: var(--pf-global--spacer--sm) var(--pf-global--spacer--lg);
+  }
+
+  &__input {
+    flex-grow: 1;
+    max-width: 500px;
+  }
+
+  &__count {
+    font-weight: var(--pf-global--FontWeight--bold);
+  }
+}
+
+.pf-c-toolbar.co-quick-start-catalog-filter__flex {
+  --pf-c-toolbar--PaddingTop: 0;
+  --pf-c-toolbar__content--PaddingLeft: 0;
+  --pf-c-toolbar__content--PaddingRight: 0;
+  --pf-c-toolbar--RowGap: var(--pf-global--spacer--md);
+}

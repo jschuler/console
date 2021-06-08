@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { StatusIcon } from '@console/shared';
 import { Label, Title } from '@patternfly/react-core';
 import { OutlinedClockIcon } from '@patternfly/react-icons';
-import { QuickStartStatus } from '../utils/quick-start-types';
+import { QuickStartStatus, QuickStartType } from '../utils/quick-start-types';
 import './QuickStartTileHeader.scss';
 
 type QuickStartTileHeaderProps = {
   status: string;
   duration: number;
   name: string;
+  type?: QuickStartType;
 };
 
 const statusColorMap = {
@@ -18,7 +19,12 @@ const statusColorMap = {
   [QuickStartStatus.NOT_STARTED]: 'grey',
 };
 
-const QuickStartTileHeader: React.FC<QuickStartTileHeaderProps> = ({ status, duration, name }) => {
+const QuickStartTileHeader: React.FC<QuickStartTileHeaderProps> = ({
+  status,
+  duration,
+  name,
+  type,
+}) => {
   const { t } = useTranslation();
 
   const statusLocaleMap = {
@@ -31,9 +37,22 @@ const QuickStartTileHeader: React.FC<QuickStartTileHeaderProps> = ({ status, dur
     <div className="co-quick-start-tile-header">
       <Title headingLevel="h3">{name}</Title>
       <div className="co-quick-start-tile-header__status">
+        {type && (
+          <Label className="co-quick-start-tile-header--margin" color={type.color}>
+            {type.text}
+          </Label>
+        )}
+        {duration && (
+          <Label
+            variant="outline"
+            icon={<OutlinedClockIcon />}
+            className="co-quick-start-tile-header--margin"
+          >
+            {t('quickstart~{{duration, number}} minutes', { duration })}
+          </Label>
+        )}
         {status !== QuickStartStatus.NOT_STARTED && (
           <Label
-            className="co-quick-start-tile-header--margin"
             variant="outline"
             color={statusColorMap[status]}
             icon={<StatusIcon status={status} />}
@@ -41,9 +60,6 @@ const QuickStartTileHeader: React.FC<QuickStartTileHeaderProps> = ({ status, dur
             {statusLocaleMap[status]}
           </Label>
         )}
-        <Label variant="outline" icon={<OutlinedClockIcon />}>
-          {t('quickstart~{{duration, number}} minutes', { duration })}
-        </Label>
       </div>
     </div>
   );

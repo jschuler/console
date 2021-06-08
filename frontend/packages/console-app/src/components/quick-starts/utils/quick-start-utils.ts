@@ -1,11 +1,9 @@
 import { QuickStart, QuickStartStatus, AllQuickStartStates } from './quick-start-types';
-import { allQuickStarts } from '../data/quick-start-test-data';
 
 export const QUICK_START_NAME = 'console.openshift.io/name';
-export const getQuickStarts = (): QuickStart[] => allQuickStarts;
 
-export const getQuickStartByName = (name: string): QuickStart =>
-  allQuickStarts.find((quickStart) => quickStart.metadata.name === name);
+export const getQuickStartByName = (name: string, quickStarts: QuickStart[]): QuickStart =>
+  quickStarts.find((quickStart) => quickStart.metadata.name === name);
 
 export const getQuickStartStatus = (
   allQuickStartStates: AllQuickStartStates,
@@ -32,9 +30,15 @@ export const getQuickStartStatusCount = (
   );
 };
 
+declare const window: Window & {
+  SERVER_FLAGS: {
+    quickStarts: any;
+  };
+};
+
 export const getDisabledQuickStarts = (): string[] => {
   let disabledQuickStarts = [];
-  const quickStartServerData = window.SERVER_FLAGS.quickStarts;
+  const quickStartServerData = window.SERVER_FLAGS?.quickStarts;
   try {
     if (quickStartServerData) {
       disabledQuickStarts = JSON.parse(quickStartServerData).disabled ?? [];
@@ -76,4 +80,11 @@ export const filterQuickStarts = (
       return matchesFilter && matchesText;
     },
   );
+};
+
+export const camelize = (str: string) => {
+  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+    if (+match === 0) return ''; // or if (/\s+/.test(match)) for white spaces
+    return index === 0 ? match.toLowerCase() : match.toUpperCase();
+  });
 };

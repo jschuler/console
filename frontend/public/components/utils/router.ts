@@ -1,5 +1,5 @@
-import * as _ from 'lodash-es';
 import { createBrowserHistory, createMemoryHistory, History } from 'history';
+import { QUICKSTART_SEARCH_FILTER_KEY, QUICKSTART_STATUS_FILTER_KEY } from '../../../utils/const';
 
 type AppHistory = History & { pushPath: History['push'] };
 
@@ -16,59 +16,30 @@ try {
   createHistory = createBrowserHistory;
 }
 
-export const history: AppHistory = createHistory({ basename: window.SERVER_FLAGS.basePath });
+export const history: AppHistory = createHistory(/*{ basename: window.SERVER_FLAGS.basePath }*/);
 
-const removeBasePath = (url = '/') =>
-  _.startsWith(url, window.SERVER_FLAGS.basePath)
-    ? url.slice(window.SERVER_FLAGS.basePath.length - 1)
-    : url;
+// const removeBasePath = (url = '/') =>
+//   _startsWith(url, window.SERVER_FLAGS.basePath)
+//     ? url.slice(window.SERVER_FLAGS.basePath.length - 1)
+//     : url;
 
-// Monkey patch history to slice off the base path
-(history as any).__replace__ = history.replace;
-history.replace = (url) => (history as any).__replace__(removeBasePath(url));
+// // Monkey patch history to slice off the base path
+// (history as any).__replace__ = history.replace;
+// history.replace = (url) => (history as any).__replace__(removeBasePath(url));
 
-(history as any).__push__ = history.push;
-history.push = (url) => (history as any).__push__(removeBasePath(url));
-(history as any).pushPath = (path) => (history as any).__push__(path);
-
-export const getQueryArgument = (arg: string) =>
-  new URLSearchParams(window.location.search).get(arg);
+// (history as any).__push__ = history.push;
+// history.push = (url) => (history as any).__push__(removeBasePath(url));
+// (history as any).pushPath = (path) => (history as any).__push__(path);
 
 export const setQueryArgument = (k: string, v: string) => {
+  if (!v) {
+    return removeQueryArgument(k);
+  }
   const params = new URLSearchParams(window.location.search);
   if (params.get(k) !== v) {
     params.set(k, v);
     const url = new URL(window.location.href);
-    history.replace(`${url.pathname}?${params.toString()}${url.hash}`);
-  }
-};
-
-export const setQueryArguments = (newParams: { [k: string]: string }) => {
-  const params = new URLSearchParams(window.location.search);
-  let update = false;
-  _.each(newParams, (v, k) => {
-    if (params.get(k) !== v) {
-      update = true;
-      params.set(k, v);
-    }
-  });
-  if (update) {
-    const url = new URL(window.location.href);
-    history.replace(`${url.pathname}?${params.toString()}${url.hash}`);
-  }
-};
-
-export const setAllQueryArguments = (newParams: { [k: string]: string }) => {
-  const params = new URLSearchParams();
-  let update = false;
-  _.each(newParams, (v, k) => {
-    if (params.get(k) !== v) {
-      update = true;
-      params.set(k, v);
-    }
-  });
-  if (update) {
-    const url = new URL(window.location.href);
+    // @ts-ignore
     history.replace(`${url.pathname}?${params.toString()}${url.hash}`);
   }
 };
@@ -78,24 +49,12 @@ export const removeQueryArgument = (k: string) => {
   if (params.has(k)) {
     params.delete(k);
     const url = new URL(window.location.href);
+    // @ts-ignore
     history.replace(`${url.pathname}?${params.toString()}${url.hash}`);
   }
 };
 
-export const removeQueryArguments = (...keys: string[]) => {
-  const params = new URLSearchParams(window.location.search);
-  let update = false;
-  keys.forEach((k) => {
-    if (params.has(k)) {
-      update = true;
-      params.delete(k);
-    }
-  });
-  if (update) {
-    const url = new URL(window.location.href);
-    history.replace(`${url.pathname}?${params.toString()}${url.hash}`);
-  }
+export const clearQuickStartFilters = () => {
+  removeQueryArgument(QUICKSTART_SEARCH_FILTER_KEY);
+  removeQueryArgument(QUICKSTART_STATUS_FILTER_KEY);
 };
-
-export const setOrRemoveQueryArgument = (k: string, v: string) =>
-  v ? setQueryArgument(k, v) : removeQueryArgument(k);
