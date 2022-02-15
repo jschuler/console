@@ -1192,7 +1192,7 @@ spec:
 apiVersion: console.openshift.io/v1
 kind: ConsoleQuickStart
 metadata:
-  name: example
+  name: hello-example
 spec:
   displayName: Deploy image
   tags:

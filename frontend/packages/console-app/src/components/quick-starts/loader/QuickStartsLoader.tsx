@@ -4,6 +4,7 @@ import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watc
 import { referenceForModel } from '@console/internal/module/k8s/k8s';
 import { QuickStartModel } from '../../../models';
 import QuickStartPermissionChecker from './QuickStartPermissionChecker';
+import { getLastLanguage } from '../../user-preferences/language/getLastLanguage';
 
 type QuickStartsLoaderProps = {
   children: (quickStarts: QuickStart[], loaded: boolean) => React.ReactNode;
@@ -23,6 +24,27 @@ const QuickStartsLoader: React.FC<QuickStartsLoaderProps> = ({ children }) => {
         : []
       : quickStarts;
   }, [quickStarts, quickStartsLoaded]);
+  debugger;
+  // @ts-ignore
+  const quickstartsByLng = {
+    en: [],
+  };
+  enabledQuickstarts.forEach(qs => {
+    if (qs.metadata.labels && qs.metadata.labels.lng) {
+      const lng = qs.metadata.labels.lng;
+      if (lng in quickstartsByLng) {
+        quickstartsByLng[lng].push(qs);
+      } else {
+        quickstartsByLng[lng] = [qs];
+      }
+    } else {
+      if ('en' in quickstartsByLng) {
+        (quickstartsByLng['en'] as QuickStart[]).push(qs);
+      } else {
+        quickstartsByLng['en'] = [qs];
+      }
+    }
+  });
 
   const [allowedQuickStarts, setAllowedQuickStarts] = React.useState<QuickStart[]>([]);
   const [loaded, setLoaded] = React.useState<boolean>(!(enabledQuickstarts.length > 0));
@@ -42,9 +64,12 @@ const QuickStartsLoader: React.FC<QuickStartsLoaderProps> = ({ children }) => {
     [enabledQuickstarts],
   );
 
-  return (
+  const lastLng = getLastLanguage() || 'en';
+  debugger;
+
+  return /*quickstartsByLng[lastLng] ?*/ (
     <>
-      {enabledQuickstarts.map((quickstart) => {
+      {quickstartsByLng[lastLng].map((quickstart) => {
         return (
           <QuickStartPermissionChecker
             key={quickstart.metadata.name}
@@ -55,7 +80,7 @@ const QuickStartsLoader: React.FC<QuickStartsLoaderProps> = ({ children }) => {
       })}
       {children(allowedQuickStarts, loaded)}
     </>
-  );
+  ) /*: null*/;
 };
 
 export default QuickStartsLoader;
