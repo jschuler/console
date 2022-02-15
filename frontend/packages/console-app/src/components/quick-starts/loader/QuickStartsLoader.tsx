@@ -4,17 +4,27 @@ import { useK8sWatchResource } from '@console/internal/components/utils/k8s-watc
 import { referenceForModel } from '@console/internal/module/k8s/k8s';
 import { QuickStartModel } from '../../../models';
 import QuickStartPermissionChecker from './QuickStartPermissionChecker';
-import { getLastLanguage } from '../../user-preferences/language/getLastLanguage';
 
 type QuickStartsLoaderProps = {
   children: (quickStarts: QuickStart[], loaded: boolean) => React.ReactNode;
+  lng?: string;
 };
 
-const QuickStartsLoader: React.FC<QuickStartsLoaderProps> = ({ children }) => {
+const QuickStartsLoader: React.FC<QuickStartsLoaderProps> = ({ children, lng = 'en' }) => {
   const [quickStarts, quickStartsLoaded] = useK8sWatchResource<QuickStart[]>({
     kind: referenceForModel(QuickStartModel),
     isList: true,
   });
+  /*
+    healthchecks: {
+      en: q1,
+      ja: q2,
+    },
+    explore-pipelines: {
+      en: q1,
+    },
+  */
+  const [quickStartsByName, setQuickStartsByName] = React.useState<any>({});
 
   const enabledQuickstarts = React.useMemo(() => {
     const disabledQuickStarts = getDisabledQuickStarts();
@@ -24,31 +34,27 @@ const QuickStartsLoader: React.FC<QuickStartsLoaderProps> = ({ children }) => {
         : []
       : quickStarts;
   }, [quickStarts, quickStartsLoaded]);
-  debugger;
-  // @ts-ignore
-  const quickstartsByLng = {
-    en: [],
-  };
-  enabledQuickstarts.forEach(qs => {
-    if (qs.metadata.labels && qs.metadata.labels.lng) {
-      const lng = qs.metadata.labels.lng;
-      if (lng in quickstartsByLng) {
-        quickstartsByLng[lng].push(qs);
-      } else {
-        quickstartsByLng[lng] = [qs];
-      }
-    } else {
-      if ('en' in quickstartsByLng) {
-        (quickstartsByLng['en'] as QuickStart[]).push(qs);
-      } else {
-        quickstartsByLng['en'] = [qs];
-      }
-    }
-  });
 
   const [allowedQuickStarts, setAllowedQuickStarts] = React.useState<QuickStart[]>([]);
   const [loaded, setLoaded] = React.useState<boolean>(!(enabledQuickstarts.length > 0));
   const permissionChecks = React.useRef<{ [name: string]: boolean }>({});
+
+  React.useEffect(() => {
+    const quickstartsByLng = [];
+    for (const [key, value] of Object.entries(quickStartsByName)) {
+      // console.log(`${key}: ${value}`);
+      const qs = value[lng] || value['en'];
+      // maintain state of the quick start across languages by removing the lng suffix
+      if (qs.metadata.name.endsWith(`-${lng}`)) {
+        qs.metadata.name = qs.metadata.name.replace(`-${lng}`, '');
+      }
+      quickstartsByLng.push(qs);
+    }
+    const qs = quickstartsByLng.filter(qs => qs.metadata.name === 'add-healthchecks');
+    console.log(qs);
+    setAllowedQuickStarts(quickstartsByLng);
+    setLoaded(true);
+  }, [lng, quickStartsByName]);
 
   const handlePermissionCheck = React.useCallback(
     (quickStart, hasPermission) => {
@@ -57,19 +63,27 @@ const QuickStartsLoader: React.FC<QuickStartsLoaderProps> = ({ children }) => {
         const filteredQuickStarts = enabledQuickstarts.filter(
           (quickstart) => permissionChecks.current[quickstart.metadata.name],
         );
-        setAllowedQuickStarts(filteredQuickStarts);
-        setLoaded(true);
+        const quickstartsByName = {};
+        filteredQuickStarts.forEach(qs => {
+          const name = qs.metadata.labels?.name || qs.metadata.name;
+          const lng = qs.metadata.labels?.lng || 'en';
+          if (name in quickstartsByName) {
+            quickstartsByName[name][lng] = qs;
+          } else {
+            quickstartsByName[name] = {
+              [lng]: qs,
+            };
+          }
+        });
+        setQuickStartsByName(quickstartsByName);
       }
     },
     [enabledQuickstarts],
   );
 
-  const lastLng = getLastLanguage() || 'en';
-  debugger;
-
-  return /*quickstartsByLng[lastLng] ?*/ (
+  return (
     <>
-      {quickstartsByLng[lastLng].map((quickstart) => {
+      {enabledQuickstarts.map((quickstart) => {
         return (
           <QuickStartPermissionChecker
             key={quickstart.metadata.name}
@@ -80,7 +94,7 @@ const QuickStartsLoader: React.FC<QuickStartsLoaderProps> = ({ children }) => {
       })}
       {children(allowedQuickStarts, loaded)}
     </>
-  ) /*: null*/;
+  );
 };
 
 export default QuickStartsLoader;
